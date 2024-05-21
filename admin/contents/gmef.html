@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAD Analysis Requests Tracker</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/gmef.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="custom-text-primary">GAD ANALYSIS REQUESTS TRACKER</h1>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <select class="form-control custom-form-control" id="yearSelect">
+                    <option>2020</option>
+                    <option>2021</option>
+                    <option>2022</option>
+                    <option>2023</option>
+                    <option selected>2024</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-control custom-form-control" id="quarterSelect">
+                    <option>Q1</option>
+                    <option>Q2</option>
+                    <option>Q3</option>
+                    <option>Q4</option>
+                </select>
+            </div>
+        </div>
+        <div class="text-center mb-4">
+            <button class="btn custom-btn-primary">View</button>
+        </div>
+        <div class="text-center mb-4">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h3>QUARTER 1 FY 2024</h3>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="custom-thead">
+                    <tr>
+                        <th>No.</th>
+                        <th>Date Received</th>
+                        <th>Requesting Office/Unit</th>
+                        <th>Documents for Review</th>
+                        <th>Status</th>
+                        <th>Date Reviewed</th>
+                        <th>Date Returned</th>
+                        <th>Remarks</th>
+                        <th>Issued Certification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>1/25/2024</td>
+                        <td>Charibelle I. Laborte BSDA Practicum Supervisor USeP-CDM</td>
+                        <td>MoA with Interfacing Development Intervention for Sustainability (IDIS) Inc. re Off-Campus Internship of the Bachelor of Science in Development Anthropology Students</td>
+                        <td>Completed</td>
+                        <td>1/29/2024</td>
+                        <td>1/30/2024</td>
+                        <td>Certification Issued</td>
+                        <td><button class="btn custom-btn-secondary">View Certificate</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2/10/2024</td>
+                        <td>John Doe, USeP-IT</td>
+                        <td>Project Proposal Review</td>
+                        <td>Pending</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>In Progress</td>
+                        <td><button class="btn custom-btn-secondary">View Certificate</button></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2/15/2024</td>
+                        <td>Jane Smith, USeP-HR</td>
+                        <td>Employee Training Report</td>
+                        <td>Completed</td>
+                        <td>2/20/2024</td>
+                        <td>2/21/2024</td>
+                        <td>Certification Issued</td>
+                        <td><button class="btn custom-btn-secondary">View Certificate</button></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>3/01/2024</td>
+                        <td>Mark Johnson, USeP-Finance</td>
+                        <td>Annual Financial Statement</td>
+                        <td>Under Review</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>In Progress</td>
+                        <td><button class="btn custom-btn-secondary">View Certificate</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn custom-btn-success">Save</button>
+        </div>
+        <br>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
