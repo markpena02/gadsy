@@ -89,6 +89,7 @@ $(document).ready(function() {
                 quarter: quarter
             },
             success: function(response) {
+                console.log(response)
                 // Check if response is an array
                 if (Array.isArray(response)) {
                     // Clear existing table content
@@ -97,8 +98,8 @@ $(document).ready(function() {
                     // Populate the table with fetched proposal details
                     response.forEach(function(proposal, index) {
                         // Add a download link for the document
-                        var downloadDocument = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.proposer_id + '" class="btn btn-secondary">Download Document</a>';
-                        var downloadResources = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.proposer_id + '" class="btn btn-secondary">Download Resources</a>';
+                        var downloadDocument = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.id + '" class="btn btn-secondary">Download Certificate</a>';
+                        var downloadResources = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.id + '" class="btn btn-secondary">Download Resources</a>';
                         $('#proposalDetails').append(
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
