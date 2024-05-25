@@ -130,10 +130,9 @@
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                console.log(response)
                 // Populate formData object with fetched proposal details
                 var formData = {
-                    proposer_id: response.id,
+                    proposer_id: response.proposer_id,
                     evaluator_id: "2",
                     document: response.document,
                     file: response.document, 
