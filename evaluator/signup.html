@@ -1,65 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAD System</title>
     <link rel="stylesheet" href="../assets/css/styles-signup.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
     <div class="container">
-        <!-- Sign-up form section -->
         <div class="signup-section">
-            <h2>Register New Account</h2>
+            <h2>Register an Evaluator Account</h2>
             <p>
                 <a href="signin.html" class="login-link">Already Registered? Login</a>
             </p>
 
-            <form class="signup-form">
+            <form id="signup-form" class="signup-form">
                 <div class="form-group">
-                    <label for="first-name">First Name:</label>
-                    <input type="text" id="first-name" name="first-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="middle-name">Middle Initial:</label>
-                    <input type="text" id="middle-name" name="middle-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="last-name">Last Name:</label>
-                    <input type="text" id="last-name" name="last-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="id-number">ID Number:</label>
-                    <input type="text" id="id-number" name="id-number" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="campus">Campus:</label>
-                    <input type="text" id="campus" name="campus" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="college-office">College/Office:</label>
-                    <input type="text" id="college-office" name="college-office" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="position">Position:</label>
-                    <input type="text" id="position" name="position" required>
+                    <label for="full-name">Full Name (First name, Middle Initial, Last name):</label>
+                    <input type="text" id="full-name" name="full_name" required>
                 </div>
 
                 <div class="form-group">
                     <label for="university-email">University Email:</label>
-                    <input type="email" id="university-email" name="university-email" required>
+                    <input type="email" id="university-email" name="university_email" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
@@ -67,13 +33,42 @@
 
                 <div class="form-group">
                     <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <input type="password" id="confirm-password" name="confirm_password" required>
                 </div>
 
                 <button type="submit" class="signup-button">SIGN UP</button>
             </form>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('#signup-form').submit(function(event) {
+                    event.preventDefault(); // Prevent the default form submission
+    
+                    // Collect form data
+                    var formData = $(this).serialize();
+    
+                    // Send form data using AJAX
+                    $.ajax({
+                        type: 'POST',
+                        url: '../controller/evaluator/create_evaluator.php',
+                        data: formData,
+                        success: function(response) {
+                            var jsonResponse = JSON.parse(response);
+                            alert(jsonResponse.message);
+                            if (jsonResponse.status === 'success') {
+                                window.location.href = '../evaluator/signin.html';
+                            }
+                            else{
+                                alert(data.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error: ' + status + ' ' + error);
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
 </body>
-
 </html>
