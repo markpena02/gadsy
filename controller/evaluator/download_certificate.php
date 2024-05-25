@@ -7,7 +7,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $proposalId = $_GET['id'];
 
     // Prepare and execute query to fetch file path based on ID
-    $stmt = $connection->prepare("SELECT document FROM documents WHERE id = ?");
+    $stmt = $connection->prepare("SELECT resources_file FROM documents WHERE id = ?");
     $stmt->bind_param("i", $proposalId);
     $stmt->execute();
     $stmt->store_result();

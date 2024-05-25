@@ -44,50 +44,48 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-        console.log("Hello world");
-    
-        // Function to parse query parameters
-        function getQueryParam(param) {
-          var urlParams = new URLSearchParams(window.location.search);
-          return urlParams.get(param);
-        }
-    
-        // Fetch proposal details
-        var proposalId = getQueryParam('id');
-        $.ajax({
-          url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
-          type: 'GET',
-          dataType: 'json',
-          success: function(response) {
-            // Populate proposal details on the page
-            $('#title').text(response.title);
-            $('#proponent').text(response.proponent_name);
-            $('#office').text(response.office);
-            $('#description').text(response.description);
-          },
-          error: function(xhr, status, error) {
-            console.error('Error:', error);
-            // Handle error
-          }
-        });
-    
-        // Event listener for View Documents button
-        $('#view-documents').click(function() {
-          
-          // Get the proposal ID from the URL
-          var proposalId = getQueryParam('id');
-          console.log(proposalId)
-          if (proposalId) {
-            // Redirect to download the document based on the proposal ID
-            window.location.href = '../../controller/proposer/download_proposal.php?id=' + proposalId;
-          } else {
-            // Proposal ID not found in the URL, handle accordingly
-            alert('Proposal ID not found.');
-          }
-        });
+        $(document).ready(function() {
+            console.log("Hello world");
 
-      });
+            // Function to parse query parameters
+            function getQueryParam(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            // Fetch proposal details
+            var proposalId = getQueryParam('id');
+            $.ajax({
+                url: '../../controller/proposer/fetch_proposal_details.php?id=' + proposalId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // Populate proposal details on the page
+                    $('#title').text(response.title);
+                    $('#proponent').text(response.proponent_name);
+                    $('#office').text(response.office);
+                    $('#description').text(response.description);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Handle error
+                }
+            });
+
+            // Event listener for View Documents button
+            $('#view-documents').click(function() {
+                // Get the proposal ID from the URL
+                var proposalId = getQueryParam('id');
+                console.log(proposalId);
+                if (proposalId) {
+                    // Redirect to download the document based on the proposal ID
+                    window.location.href = '../../controller/proposer/download_proposal.php?id=' + proposalId;
+                } else {
+                    // Proposal ID not found in the URL, handle accordingly
+                    alert('Proposal ID not found.');
+                }
+            });
+        });
     </script>
     
 </body>

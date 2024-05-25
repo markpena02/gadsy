@@ -11,7 +11,7 @@
 
 <div class="container mt-5">
   <div class="title-box">
-    <h1 class="text-center">Pending Evaluation</h1>
+    <h1 class="text-center">Pending Evaluations</h1>
   </div>
   <div class="table-container">
     <table id="proposal-table" class="table">
@@ -41,6 +41,7 @@
       type: 'GET',
       dataType: 'json',
       success: function(response) {
+        // console.log(response)
         // Process the response and update the table
         if(response.length > 0) {
           var tableRows = '';
@@ -49,7 +50,7 @@
             tableRows += '<td>' + proposal.title + '</td>';
             tableRows += '<td>' + proposal.proponent_name + '</td>';
             tableRows += '<td>' + proposal.description + '</td>';
-            tableRows += '<td><a href="proposal_details copy.html?id=' + proposal.proposer_id + '" class="btn btn-view">View</a></td>';
+            tableRows += '<td><a href="proposal_details.html?id=' + proposal.id + '" class="btn btn-view">View</a></td>';
             tableRows += '</tr>';
           });
           $('#proposal-table tbody').html(tableRows);

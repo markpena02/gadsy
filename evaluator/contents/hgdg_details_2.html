@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gender Mainstreaming Review Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/hgdgform.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="text-center logo-container"><img src="../../assets/img/useplogo.png" class="logo" alt="Logo"></td>
+                    <td class="text-center">
+                        <div>Republic of the Philippines</div>
+                        <div class="uni-name"><h2>University of Southeastern Philippines Breaking Hallelujah</h2></div>
+                        <div>Iñigo St., Bo. Obrero, Davao City 8000</div>
+                        <div>Telephone: (082) 227-8192</div>
+                        <div>Website: <a href="http://www.usep.edu.ph">www.usep.edu.ph</a></div>
+                        <div>Email: <a href="mailto:president@usep.edu.ph">president@usep.edu.ph</a></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-center font-weight-bold">GENDER MAINSTREAMING REVIEW FORM</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <p>Kindly provide all the required information on this form.</p>
+
+    <table class="table table-bordered bg-white">
+        <tr>
+            <td><strong>TITLE OF PROPOSAL:</strong> <span id="title"></span></td>
+        </tr>
+        <tr>
+            <td><strong>NAME OF THE PROPONENT/S:</strong> <span id="proponent"></span></td>
+        </tr>
+        <tr>
+            <td><strong>OFFICE/UNIT:</strong> <span id="office"></span></td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered bg-white">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">No</th>
+                <th scope="col">Partly</th>
+                <th scope="col">Yes</th>
+                <th scope="col">Score</th>
+                <th scope="col">Comments/Recommendations</th>
+            </tr>
+        </thead>
+        <tbody id="formBody">
+            <!-- Form rows will be inserted here -->
+        </tbody>
+    </table>
+    <div>Total Score: <span id="totalScore">0.00</span></div>
+    <div class="text-center no-print">
+        <button class="btn btn-primary" id="saveBtn">Save</button>
+        <button class="btn btn-primary" id="submitBtn">Submit</button>
+    </div>
+</div>
+
+<script>
+    // Function to extract query parameter from URL
+    function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+    
+    $(document).ready(function() {
+        // Fetch the ID from the URL
+        const proposalId = getQueryParam('id');
+        // console.log(proposalId)
+        // Fetch the proposal details using AJAX
+        // $.ajax({
+        //     url: '../../controller/evaluator/fetch_proposal_details?id=' + proposalId,
+        //     type: 'GET',
+        //     dataType: 'json', // Expecting JSON response
+        //     success: function(response) {
+        //         console.log(response)
+        //         // Set the form fields with the fetched data
+        //         $('#title').text(response.title);
+        //         $('#proponent').text(response.proponent_name);
+        //         $('#office').text(response.office);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('Error fetching proposal details:', error);
+        //         alert('Error fetching proposal details. Please try again later.');
+        //     }
+        // });
+    
+        // Fetch the document details using AJAX
+        $.ajax({
+            url: '../../controller/evaluator/fetch_document_details.php?id=' + proposalId,
+            type: 'GET',
+            dataType: 'text', // Expecting text response
+            success: function(response) {
+                const data = JSON.parse(response);
+                $.ajax({
+                        url: '../../controller/evaluator/fetch_proposal_details.php?id=' + data[0].proposer_id,
+                        type: 'GET',
+                        dataType: 'text', // Expecting JSON response
+                        success: function(response1) {
+                            response2 = JSON.parse(response1)
+                            $('#title').text(response2.title);
+                            $('#proponent').text(response2.proponent_name);
+                            $('#office').text(response2.college_office);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching proposal details:', error);
+                            alert('Error fetching proposal details. Please try again later.');
+                        }
+                    });
+                try {
+                    // Parse the main response
+                    
+                    console.log("thisis DATATDATTADTATDATDT: "+data[0].proposer_id)
+                    
+
+                    // Ensure that the data is an array and has at least one element
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Parse the nested JSON string within document_file
+                        const documentItems = JSON.parse(data[0].document_file);
+
+                        console.log("Response:", data);
+                        // console.log("thisis DATATDATTADTATDATDT: "+data[0].proposer_id)
+                        console.log("Parsed document items:", JSON.parse(documentItems));
+                        $.ajax({
+            url: '../../controller/evaluator/fetch_document_details.php?id=' + proposalId,
+            type: 'GET',
+            dataType: 'text', // Expecting text response
+            success: function(response) {
+                // console.log(response)
+                // const data = JSON.parse(response);
+                console.log("response"+JSON.parse(response));
+                console.log("sugar mama");
+                const documentItems = JSON.parse(response.document_file);
+                console.log(documentItems);
+                try {
+                    // Parse the document_file JSON string
+                    const documentItems = JSON.parse(data.document_file);
+                    console.log(documentItems);
+
+                    // Loop through the documentItems and populate the form fields
+                    documentItems.forEach(function(item, index) {
+                        const itemIndex = index + 1;
+                        const scoreNo = item.score === 0 ? 'checked' : '';
+                        const scorePartly = item.score === 0.5 ? 'checked' : '';
+                        const scoreYes = item.score === 1 ? 'checked' : '';
+
+                        $('#formBody').append(`
+                            <tr>
+                                <td>${item.item}</td>
+                                <td class="text-center"><input type="radio" name="item${itemIndex}" value="No" class="score-radio" ${scoreNo}></td>
+                                <td class="text-center"><input type="radio" name="item${itemIndex}" value="Partly" class="score-radio" ${scorePartly}></td>
+                                <td class="text-center"><input type="radio" name="item${itemIndex}" value="Yes" class="score-radio" ${scoreYes}></td>
+                                <td><span class="score" id="score${itemIndex}">${item.score.toFixed(1)}</span></td>
+                                <td rowspan="1"><textarea class="form-control" id="comment${itemIndex}" rows="2">${item.comment}</textarea></td>
+                            </tr>
+                        `);
+                    });
+
+                    // Calculate and display the total score
+                    let totalScore = documentItems.reduce((acc, curr) => acc + curr.score, 0);
+                    $('#totalScore').text(totalScore.toFixed(2));
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    $('#formBody').html('<tr><td colspan="6">Error parsing JSON data. Please try again later.</td></tr>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                $('#formBody').html('<tr><td colspan="6">Error fetching data. Please try again later.</td></tr>');
+            }
+        });
+                    } else {
+                        console.error("Unexpected response format or empty array");
+                    }
+                } catch (error) {
+                    console.error("Error parsing JSON:", error);
+                }
+
+                console.log("sugar mama");
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+            }
+        });
+
+        // $.ajax({
+        //     url: '../../controller/evaluator/fetch_document_details.php?id=' + proposalId,
+        //     type: 'GET',
+        //     dataType: 'text', // Expecting text response
+        //     success: function(response) {
+        //         // console.log(response)
+        //         // const data = JSON.parse(response);
+        //         console.log("response"+JSON.parse(response));
+        //         console.log("sugar mama");
+        //         const documentItems = JSON.parse(response.document_file);
+        //         console.log(documentItems);
+        //         try {
+        //             // Parse the document_file JSON string
+        //             const documentItems = JSON.parse(data.document_file);
+        //             console.log(documentItems);
+
+        //             // Loop through the documentItems and populate the form fields
+        //             documentItems.forEach(function(item, index) {
+        //                 const itemIndex = index + 1;
+        //                 const scoreNo = item.score === 0 ? 'checked' : '';
+        //                 const scorePartly = item.score === 0.5 ? 'checked' : '';
+        //                 const scoreYes = item.score === 1 ? 'checked' : '';
+
+        //                 $('#formBody').append(`
+        //                     <tr>
+        //                         <td>${item.item}</td>
+        //                         <td class="text-center"><input type="radio" name="item${itemIndex}" value="No" class="score-radio" ${scoreNo}></td>
+        //                         <td class="text-center"><input type="radio" name="item${itemIndex}" value="Partly" class="score-radio" ${scorePartly}></td>
+        //                         <td class="text-center"><input type="radio" name="item${itemIndex}" value="Yes" class="score-radio" ${scoreYes}></td>
+        //                         <td><span class="score" id="score${itemIndex}">${item.score.toFixed(1)}</span></td>
+        //                         <td rowspan="1"><textarea class="form-control" id="comment${itemIndex}" rows="2">${item.comment}</textarea></td>
+        //                     </tr>
+        //                 `);
+        //             });
+
+        //             // Calculate and display the total score
+        //             let totalScore = documentItems.reduce((acc, curr) => acc + curr.score, 0);
+        //             $('#totalScore').text(totalScore.toFixed(2));
+        //         } catch (error) {
+        //             console.error('Error parsing JSON:', error);
+        //             $('#formBody').html('<tr><td colspan="6">Error parsing JSON data. Please try again later.</td></tr>');
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('Error:', error);
+        //         $('#formBody').html('<tr><td colspan="6">Error fetching data. Please try again later.</td></tr>');
+        //     }
+        // });
+
+    });
+    </script>
+    
+</body>
+</html>

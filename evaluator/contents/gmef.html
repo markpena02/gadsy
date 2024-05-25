@@ -49,11 +49,13 @@
                         <th>Date Received</th>
                         <th>Requesting Office/Unit</th>
                         <th>Documents for Review</th>
-                        <th>Status</th>
+                        >
                         <th>Date Reviewed</th>
-                        <th>Date Returned</th>
-                        <th>Remarks</th>
-                        <th>Issued Certification</th>
+                        <!-- <th>Date Returned</th> -->
+                        <!-- <th>Remarks</th> -->
+                        <th>Status</th>
+                        <th>Resources</th>
+                        <th>Issued Certifications</th>
                     </tr>
                 </thead>
                 <tbody id="proposalDetails">
@@ -72,69 +74,72 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="js/gmef.js"></script>
     <script>
-$(document).ready(function() {
-    // Function to fetch proposal details and populate the table
-    function fetchProposalDetails() {
-        var year = $('#yearSelect').val();
-        var quarter = $('#quarterSelect').val();
-
-        $.ajax({
-            url: '../../controller/evaluator/fetch_archieves.php', // Path to your PHP script that fetches proposal details
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                year: year,
-                quarter: quarter
-            },
-            success: function(response) {
-                // Check if response is an array
-                if (Array.isArray(response)) {
-                    // Clear existing table content
-                    $('#proposalDetails').empty();
-
-                    // Populate the table with fetched proposal details
-                    response.forEach(function(proposal, index) {
-                        // Add a download link for the document
-                        var downloadLink = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.proposer_id + '" class="btn btn-secondary">Download Document</a>';
-
-                        $('#proposalDetails').append(
-                            '<tr>' +
-                            '<td>' + (index + 1) + '</td>' +
-                            '<td>' + proposal.date_received + '</td>' +
-                            '<td>' + proposal.college_office + '</td>' +
-                            '<td>' + proposal.description + '</td>' +
-                            '<td>' + proposal.status + '</td>' +
-                            '<td>' + proposal.date_reviewed + '</td>' +
-                            '<td>' + proposal.date_received + '</td>' +
-                            '<td>' + proposal.remarks + '</td>' +
-                            '<td>' + downloadLink + '</td>' + // Add download link here
-                            '</tr>'
-                        );
-                    });
-
-                    // Set quarter heading
-                    $('#quarterHeading').text('QUARTER ' + quarter + ' FY ' + year);
-                } else {
-                    console.error('Invalid response format:', response);
-                    // Handle error: Display an error message or perform other actions as needed
+    $(document).ready(function() {
+        // Function to fetch proposal details and populate the table
+        function fetchProposalDetails() {
+            var year = $('#yearSelect').val();
+            var quarter = $('#quarterSelect').val();
+    
+            $.ajax({
+                url: '../../controller/evaluator/fetch_archieves.php', // Path to your PHP script that fetches proposal details
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    year: year,
+                    quarter: quarter
+                },
+                success: function(response) {
+                    console.log(response)
+                    // Check if response is an array
+                    if (Array.isArray(response)) {
+                        // Clear existing table content
+                        $('#proposalDetails').empty();
+    
+                        // Populate the table with fetched proposal details
+                        response.forEach(function(proposal, index) {
+                            // Add a download link for the document
+                            var downloadDocument = '<a href="hgdg_details.html?id=' + proposal.id + '" class="btn btn-secondary">View Certificate</a>';
+                            var downloadResources = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.id + '" class="btn btn-secondary">Download Resources</a>';
+                            $('#proposalDetails').append(
+                                '<tr>' +
+                                '<td>' + (index + 1) + '</td>' +
+                                '<td>' + proposal.date_received + '</td>' +
+                                '<td>' + proposal.title + '</td>' +
+                                '<td>' + proposal.office + '</td>' +
+                                '<td>' + proposal.date_reviewed + '</td>' +
+                                // '<td>' + proposal.date_received + '</td>' +
+                                '<td>' + proposal.status + '</td>' +
+                                //'<td>' + proposal.remarks + '</td>' +
+                                // '<td>' + proposal.resources + '</td>' +
+                                '<td>' + downloadResources + '</td>' + // Add download link here
+                                '<td>' + downloadDocument + '</td>' + // Add download link here
+                                '</tr>'
+                            );
+                        });
+    
+                        // Set quarter heading
+                        $('#quarterHeading').text('QUARTER ' + quarter + ' FY ' + year);
+                    } else {
+                        console.error('Invalid response format:', response);
+                        // Handle error: Display an error message or perform other actions as needed
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Handle error
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                // Handle error
-            }
+            });
+        }
+    
+        // Event listener for the View button
+        $('#viewButton').click(function() {
+            fetchProposalDetails();
         });
-    }
-
-    // Event listener for the View button
-    $('#viewButton').click(function() {
+    
+        // Call fetchProposalDetails function on page load
         fetchProposalDetails();
     });
-
-    // Call fetchProposalDetails function on page load
-    fetchProposalDetails();
-});
-
+    
 
     </script>
 </body>
