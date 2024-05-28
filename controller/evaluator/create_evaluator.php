@@ -1,52 +1,30 @@
 <?php
-// Include your database connection file
 include_once("../database.php");
 
-// Check if the proposal ID is provided
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $proposalId = $_GET['id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full_name = $_POST['full_name'];
+    $university_email = $_POST['university_email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    // Prepare and execute query to fetch file path based on ID
-    $stmt = $connection->prepare("SELECT document FROM submissions WHERE id = ?");
-    $stmt->bind_param("i", $proposalId);
-    $stmt->execute();
-    $stmt->store_result();
-
-    // Check if a file path is found
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($filePath);
-        $stmt->fetch();
-
-        // Construct the full file path
-        $fullFilePath = $filePath;
-
-        // Check if the file exists
-        if (file_exists($fullFilePath)) {
-            // Set headers for file download
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . basename($fullFilePath) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($fullFilePath));
-
-            // Output the file content
-            readfile($fullFilePath);
-            exit;
-        } else {
-            // File not found
-            echo "File not found.";
-        }
-    } else {
-        // Proposal not found
-        echo "Proposal not found.";
+    if ($password !== $confirm_password) {
+        echo json_encode(["status" => "error", "message" => "Passwords do not match."]);
+        exit();
     }
 
-    // Close statement and database connection
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $connection->prepare("INSERT INTO evaluators (full_name, university_email, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $full_name, $university_email, $hashed_password);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success", "message" => "Registration successful!"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Registration failed. Please try again later."]);
+    }
+
     $stmt->close();
-    $connection->close();
-} else {
-    // Proposal ID not provided
-    echo "Proposal ID not provided.";
 }
+
+$connection->close();
 ?>
