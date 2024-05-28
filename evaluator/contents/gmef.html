@@ -47,10 +47,10 @@
                     <tr>
                         <th>No.</th>
                         <th>Date Received</th>
+                        <th>Date Reviewed</th>
                         <th>Requesting Office/Unit</th>
                         <th>Documents for Review</th>
-                        >
-                        <th>Date Reviewed</th>
+                        
                         <!-- <th>Date Returned</th> -->
                         <!-- <th>Remarks</th> -->
                         <th>Status</th>
@@ -89,6 +89,7 @@
                     quarter: quarter
                 },
                 success: function(response) {
+                    console.log("response")
                     console.log(response)
                     // Check if response is an array
                     if (Array.isArray(response)) {
@@ -97,24 +98,42 @@
     
                         // Populate the table with fetched proposal details
                         response.forEach(function(proposal, index) {
+                            // console.log("response"+index)
+                            // console.log(proposal)
+                            // console.log(proposal.proposer_id,)
+                            //-------------------------------------------------------------------------------------------------------------------------------------------
+                            $.ajax({
+                                url: '../../controller/evaluator/fetch_proposal_details.php?id=' + proposal.proposer_id,
+                                type: 'GET',
+                                dataType: 'text', // Expecting text response
+                                success: function(document_response) {
+                                    proposalDetails = JSON.parse(document_response)
+                                    console.log("proposalDetails")
+                                    console.log(proposalDetails.status)
+                                    console.log(proposalDetails.submitted_at)
+                                    console.log(proposalDetails.office)
+                                    var downloadDocument = '<a href="hgdg_details.html?id=' + proposal.id + '" class="btn btn-secondary">View Certificate</a>';
+                                    var downloadResources = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.id + '" class="btn btn-secondary">Download Resources</a>';
+                                    $('#proposalDetails').append(
+                                        '<tr>' +
+                                        '<td>' + (index + 1) + '</td>' +
+                                        '<td>' + proposalDetails.submitted_at + '</td>' +
+                                        '<td>' + proposal.date_reviewed + '</td>' +
+                                        '<td>' + proposalDetails.office + '</td>' +
+                                        '<td>' + proposalDetails.office + '</td>' +
+                                        '<td>' + proposalDetails.status + '</td>' +
+                                        '<td>' + downloadResources + '</td>' + 
+                                        '<td>' + downloadDocument + '</td>' +
+                                        '</tr>'
+                                    );
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error:', error);
+                                    $('#formBody').html('<tr><td colspan="6">Error fetching data. Please try again later.</td></tr>');
+                                }
+                            });
                             // Add a download link for the document
-                            var downloadDocument = '<a href="hgdg_details.html?id=' + proposal.id + '" class="btn btn-secondary">View Certificate</a>';
-                            var downloadResources = '<a href="../../controller/evaluator/download_certificate.php?id=' + proposal.id + '" class="btn btn-secondary">Download Resources</a>';
-                            $('#proposalDetails').append(
-                                '<tr>' +
-                                '<td>' + (index + 1) + '</td>' +
-                                '<td>' + proposal.date_received + '</td>' +
-                                '<td>' + proposal.title + '</td>' +
-                                '<td>' + proposal.office + '</td>' +
-                                '<td>' + proposal.date_reviewed + '</td>' +
-                                // '<td>' + proposal.date_received + '</td>' +
-                                '<td>' + proposal.status + '</td>' +
-                                //'<td>' + proposal.remarks + '</td>' +
-                                // '<td>' + proposal.resources + '</td>' +
-                                '<td>' + downloadResources + '</td>' + // Add download link here
-                                '<td>' + downloadDocument + '</td>' + // Add download link here
-                                '</tr>'
-                            );
+                           
                         });
     
                         // Set quarter heading

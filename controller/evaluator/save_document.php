@@ -12,29 +12,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $evaluator_id = $_POST['evaluator_id'];
     $document_file_json = json_encode($_POST['document_file']); // Encode document_file as JSON
     $resources_file = $_POST['resources_file'];
-    $date_received = $_POST['date_received'];
+    $date_received = date('Y-m-d H:i:s'); // Set date_received to current date and time
     $date_reviewed = $_POST['date_reviewed'];
     $status = $_POST['status'];
     $remarks = $_POST['remarks'];
     $description = $_POST['description'];
     $college_office = $_POST['college_office'];
+    // $submission_id = $_POST['submission_id'];
 
     // Insert data into the documents table
     $stmt = $connection->prepare("INSERT INTO documents (proposer_id, evaluator_id, document_file, resources_file, date_received, date_reviewed, status, remarks, description, college_office) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iissssssss", $proposer_id, $evaluator_id, $document_file_json, $resources_file, $date_received, $date_reviewed, $status, $remarks, $description, $college_office);
 
     if ($stmt->execute()) {
-        // Document submission successful
-        $response = ["status" => "success", "message" => "Document saved successfully!", "document_file_json" => $document_file_json];
+        // Document submission successful, now update the submission status
+        $stmt->close(); // Close the previous statement
 
-        echo json_encode($response);
+        $status = 'Completed';
+        $stmt = $connection->prepare("UPDATE submissions SET status = ? WHERE id = ?");
+        $stmt->bind_param("si", $status, $proposer_id);
+
+        if ($stmt->execute()) {
+            // Both operations successful
+            $response = ["status" => "success", "message" => "Document saved and submission updated successfully!", "document_file_json" => $document_file_json];
+        } else {
+            // Failed to update submission status
+            $response = ["status" => "error", "message" => "Failed to update submission status."];
+        }
     } else {
         // Document submission failed
-        echo json_encode(["status" => "error", "message" => "Failed to save document."]);
+        $response = ["status" => "error", "message" => "Failed to save document."];
     }
 
     // Close the statement
     $stmt->close();
+    echo json_encode($response);
 } else {
     // If the request method is not POST
     echo json_encode(["status" => "error", "message" => "Invalid request method."]);

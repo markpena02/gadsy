@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
         <div class="text-center mb-4">
-            <h1 class="custom-text-primary">GAD ANALYSIS REQUESTS TRACKER 123123</h1>
+            <h1 class="custom-text-primary">GAD ANALYSIS REQUESTS TRACKER</h1>
         </div>
         <div class="row mb-4">
             <div class="col-md-6">
@@ -47,12 +47,13 @@
                     <tr>
                         <th>No.</th>
                         <th>Date Received</th>
+                        <th>Date Reviewed</th>
                         <th>Requesting Office/Unit</th>
                         <th>Documents for Review</th>
+                        
+                        <!-- <th>Date Returned</th> -->
+                        <!-- <th>Remarks</th> -->
                         <th>Status</th>
-                        <th>Date Reviewed</th>
-                        <th>Date Returned</th>
-                        <th>Remarks</th>
                         <th>Resources</th>
                         <th>Issued Certifications</th>
                     </tr>
@@ -103,12 +104,13 @@
                                 '<tr>' +
                                 '<td>' + (index + 1) + '</td>' +
                                 '<td>' + proposal.date_received + '</td>' +
-                                '<td>' + proposal.college_office + '</td>' +
-                                '<td>' + proposal.description + '</td>' +
-                                '<td>' + proposal.status + '</td>' +
                                 '<td>' + proposal.date_reviewed + '</td>' +
-                                '<td>' + proposal.date_received + '</td>' +
-                                '<td>' + proposal.remarks + '</td>' +
+                                '<td>' + proposal.title + '</td>' +
+                                '<td>' + proposal.office + '</td>' +
+                                
+                                // '<td>' + proposal.date_received + '</td>' +
+                                '<td>' + proposal.status + '</td>' +
+                                //'<td>' + proposal.remarks + '</td>' +
                                 // '<td>' + proposal.resources + '</td>' +
                                 '<td>' + downloadResources + '</td>' + // Add download link here
                                 '<td>' + downloadDocument + '</td>' + // Add download link here
