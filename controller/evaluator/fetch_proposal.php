@@ -6,8 +6,8 @@ function fetch_proposals() {
     // Connect to the database
     global $connection;
 
-    // Query to fetch specific columns from submissions table
-    $query = "SELECT title, proponent_name, description, id, proposer_id FROM submissions";
+    // Query to fetch specific columns from submissions table where status is pending
+    $query = "SELECT title, proponent_name, description, id, proposer_id FROM submissions WHERE status = 'pending'";
 
     // Execute the query
     $result = $connection->query($query);
@@ -41,4 +41,5 @@ function fetch_proposals() {
 // Usage example:
 $proposals = fetch_proposals();
 echo json_encode($proposals);
+
 ?>
