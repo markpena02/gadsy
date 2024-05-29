@@ -17,21 +17,18 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         $stmt->bind_result($filePath);
         $stmt->fetch();
 
-        // Construct the full file path
-        $fullFilePath = $filePath;
-
         // Check if the file exists
-        if (file_exists($fullFilePath)) {
+        if (file_exists($filePath)) {
             // Set headers for file download
             header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . basename($fullFilePath) . '"');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
-            header('Content-Length: ' . filesize($fullFilePath));
+            header('Content-Length: ' . filesize($filePath));
 
             // Output the file content
-            readfile($fullFilePath);
+            readfile($filePath);
             exit;
         } else {
             // File not found

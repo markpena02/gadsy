@@ -7,7 +7,6 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/hgdgform.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 </head>
 <body>
 
@@ -19,11 +18,11 @@
                     <td class="text-center logo-container"><img src="../../assets/img/useplogo.png" class="logo" alt="Logo"></td>
                     <td class="text-center">
                         <div>Republic of the Philippines</div>
-                        <div class="uni-name"><h2>University of Southeastern Philippines</h2></div>
+                        <div class="uni-name"><h2>University of Southeastern Philippines Chiksilog</h2></div>
                         <div>Iñigo St., Bo. Obrero, Davao City 8000</div>
                         <div>Telephone: (082) 227-8192</div>
-                        <div>Website: www.usep.edu.ph</div>
-                        <div>Email: president@usep.edu.ph.</div>
+                        <div>Website: <a href="http://www.usep.edu.ph">www.usep.edu.ph</a></div>
+                        <div>Email: <a href="mailto:president@usep.edu.ph">president@usep.edu.ph</a></div>
                     </td>
                 </tr>
                 <tr>
@@ -37,7 +36,7 @@
 
     <table class="table table-bordered bg-white">
         <tr>
-            <td><strong>TITLE OF PROPOSAL:</strong> Memorandum of Agreement with Interfacing Development Intervention for Sustainability for OffCampus Internship of BSEE Students</td>
+            <td><strong>TITLE OF PROPOSAL:</strong> Memorandum of Agreement with Interfacing Development Intervention for Sustainability for Off-Campus Internship of BSEE Students</td>
         </tr>
         <tr>
             <td><strong>NAME OF THE PROPONENT/S:</strong> ENGR. RICARDO FORBES L. ABEAR, BSEE OJT Faculty Supervisor</td>
@@ -80,7 +79,7 @@
                 <td class="text-center"><input type="radio" name="item3" value="No" class="score-radio"></td>
                 <td class="text-center"><input type="radio" name="item3" value="Partly" class="score-radio"></td>
                 <td class="text-center"><input type="radio" name="item3" value="Yes" class="score-radio"></td>
-                <td><span class="score" id="score3">0.0</span></td> <!-- Corrected ID here -->
+                <td><span class="score" id="score3">0.0</span></td>
                 <td rowspan="1"><textarea class="form-control" rows="2"></textarea></td>
             </tr>
             <tr>
@@ -88,79 +87,20 @@
                 <td class="text-center"><input type="radio" name="item4" value="No" class="score-radio"></td>
                 <td class="text-center"><input type="radio" name="item4" value="Partly" class="score-radio"></td>
                 <td class="text-center"><input type="radio" name="item4" value="Yes" class="score-radio"></td>
-                <td><span class="score" id="score4">0.0</span></td> <!-- Corrected ID here -->
+                <td><span class="score" id="score4">0.0</span></td>
                 <td rowspan="1"><textarea class="form-control" rows="2"></textarea></td>
             </tr>
-            <!-- Add more items as needed -->
         </tbody>
     </table>
     <div>Total Score: <span id="totalScore">0.00</span></div>
     <div class="text-center no-print">
-        <button class="btn btn-primary" onclick="printForm()">Save</button>
-        <button class="btn btn-primary" onclick="submitForm()">Submit</button>
+        <button class="btn btn-primary" id="saveBtn">Save</button>
+        <button class="btn btn-primary" id="submitBtn">Submit</button>
     </div>
 </div>
 
 <script src="js/print.js"></script>
 <script>
-    function printForm() {
-        const printButton = document.querySelector('.no-print');
-        printButton.style.display = 'none';
-        window.print();
-        printButton.style.display = 'block';
-    }
-    
-    function submitForm() {
-    console.log("submitted form");
-    printForm();
-
-    // Get proposal ID from URL query string
-    var proposalId = getQueryParam('id');
-    console.log("testing here");
-    console.log(proposalId);
-    // Fetch proposal details
-    $.ajax({
-        url: '../../controller/evaluator/fetch_proposal_details.php?id=' + proposalId,
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            // Populate formData object with fetched proposal details
-            var formData = {
-                proposer_id: response.proposer_id,
-                evaluator_id: response.evaluator_id,
-                document: response.document,
-                file: "", // Placeholder for file name (will be handled separately)
-                date_received: response.submitted_at, // Replace with the actual date received
-                date_reviewed: "", // Replace with the actual date reviewed
-                status: "", // Replace with the actual status
-                remarks: "", // Replace with the actual remarks
-                description: response.description // Use the description from proposal details
-            };
-
-            // Perform AJAX request to save the form data
-            $.ajax({
-                type: 'POST',
-                url: '../../controller/evaluator/save_document.php',
-                data: formData,
-                success: function(response) {
-                    console.log(response);
-                    // Handle success response
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    // Handle error
-                }
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-            // Handle error
-        }
-    });
-}
-
-
-
 $(document).ready(function() {
     const scores = {
         "No": 0.0,
@@ -186,6 +126,90 @@ $(document).ready(function() {
     $('.score-radio').on('change', function() {
         updateScore(this);
     });
+
+    $('#saveBtn').on('click', function() {
+       
+        const printButton = document.querySelector('.no-print');
+        printButton.style.display = 'none';
+        window.print();
+        printButton.style.display = 'block';
+    });
+
+    $('#submitBtn').on('click', function() {
+        console.log("submitted form");
+        const proposalId = getQueryParam('id');
+            console.log(proposalId);
+            if (!proposalId) {
+                console.error('Proposal ID not found in the URL.');
+                return;
+            }
+        const scoresData = [];
+
+        $('.score-radio').each(function() {
+            const item = $(this).attr('name');
+            const value = $(this).val();
+            const comment = $(this).closest('tr').find('textarea').val();
+            scoresData.push({
+                "item": item,
+                "score": scores[value],
+                "comment": comment
+            });
+        });
+
+        console.log(JSON.stringify(scoresData))
+        $.ajax({
+            url: '../../controller/evaluator/fetch_proposal_details.php?id=' + proposalId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const formData = {
+                    proposer_id: response.id,
+                    evaluator_id: "2",
+                    document_file: JSON.stringify(scoresData), // Using scores JSON string instead of response.document
+                    resources_file: response.document,
+                    date_received: response.submitted_at,
+                    date_reviewed: new Date().toISOString().slice(0, 10),
+                    status: "Completed",
+                    remarks: "Certification Issued",
+                    description: response.description,
+                    college_office: "collegeOffice"
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '../../controller/evaluator/save_document.php',
+                    data: formData,
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+        // Send the data to a PHP script for insertion into the database
+        // $.ajax({
+        //     type: 'POST',
+        //     url: 'save_scores.php', // Path to your PHP script
+        //     data: {scoresData: JSON.stringify(scoresData)},
+        //     success: function(response) {
+        //         console.log(response);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('Error:', error);
+        //     }
+        // });
+    });
+
+
+    function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 });
 </script>
 

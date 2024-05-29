@@ -18,11 +18,11 @@
                     <td class="text-center logo-container"><img src="../../assets/img/useplogo.png" class="logo" alt="Logo"></td>
                     <td class="text-center">
                         <div>Republic of the Philippines</div>
-                        <div class="uni-name"><h2>University of Southeastern Philippines asdasdas</h2></div>
+                        <div class="uni-name"><h2>University of Southeastern Philippines Breaking Bad</h2></div>
                         <div>Iñigo St., Bo. Obrero, Davao City 8000</div>
                         <div>Telephone: (082) 227-8192</div>
-                        <div>Website: www.usep.edu.ph</div>
-                        <div>Email: president@usep.edu.ph.</div>
+                        <div>Website: <a href="http://www.usep.edu.ph">www.usep.edu.ph</a></div>
+                        <div>Email: <a href="mailto:president@usep.edu.ph">president@usep.edu.ph</a></div>
                     </td>
                 </tr>
                 <tr>
@@ -36,7 +36,7 @@
 
     <table class="table table-bordered bg-white">
         <tr>
-            <td><strong>TITLE OF PROPOSAL:</strong> Memorandum of Agreement with Interfacing Development Intervention for Sustainability for OffCampus Internship of BSEE Students</td>
+            <td><strong>TITLE OF PROPOSAL:</strong> Memorandum of Agreement with Interfacing Development Intervention for Sustainability for Off-Campus Internship of BSEE Students</td>
         </tr>
         <tr>
             <td><strong>NAME OF THE PROPONENT/S:</strong> ENGR. RICARDO FORBES L. ABEAR, BSEE OJT Faculty Supervisor</td>
@@ -74,12 +74,32 @@
                 <td><span class="score" id="score2">0.0</span></td>
                 <td rowspan="1"><textarea class="form-control" rows="2"></textarea></td>
             </tr>
-            <!-- Add more items as needed -->
+            <tr>
+                <td>Item ambot</td>
+                <td class="text-center"><input type="radio" name="item3" value="No" class="score-radio"></td>
+                <td class="text-center"><input type="radio" name="item3" value="Partly" class="score-radio"></td>
+                <td class="text-center"><input type="radio" name="item3" value="Yes" class="score-radio"></td>
+                <td><span class="score" id="score3">0.0</span></td>
+                <td rowspan="1"><textarea class="form-control" rows="2"></textarea></td>
+            </tr>
+            <tr>
+                <td>Item ambot2</td>
+                <td class="text-center"><input type="radio" name="item4" value="No" class="score-radio"></td>
+                <td class="text-center"><input type="radio" name="item4" value="Partly" class="score-radio"></td>
+                <td class="text-center"><input type="radio" name="item4" value="Yes" class="score-radio"></td>
+                <td><span class="score" id="score4">0.0</span></td>
+                <td rowspan="1"><textarea class="form-control" rows="2"></textarea></td>
+            </tr>
         </tbody>
     </table>
     <div>Total Score: <span id="totalScore">0.00</span></div>
+    <div class="text-center no-print">
+        <button class="btn btn-primary" id="saveBtn">Save</button>
+        <button class="btn btn-primary" id="submitBtn">Submit</button>
+    </div>
 </div>
 
+<script src="js/print.js"></script>
 <script>
 $(document).ready(function() {
     const scores = {
@@ -106,6 +126,49 @@ $(document).ready(function() {
     $('.score-radio').on('change', function() {
         updateScore(this);
     });
+
+    $('#saveBtn').on('click', function() {
+       
+        const printButton = document.querySelector('.no-print');
+        printButton.style.display = 'none';
+        window.print();
+        printButton.style.display = 'block';
+    });
+
+    $('#submitBtn').on('click', function() {
+        console.log("submitted form");
+        const scoresData = [];
+
+        $('.score-radio').each(function() {
+            const item = $(this).attr('name');
+            const value = $(this).val();
+            const comment = $(this).closest('tr').find('textarea').val();
+            scoresData.push({
+                "item": item,
+                "score": scores[value],
+                "comment": comment
+            });
+        });
+
+        // Send the data to a PHP script for insertion into the database
+        $.ajax({
+            type: 'POST',
+            url: 'save_scores.php', // Path to your PHP script
+            data: {scoresData: JSON.stringify(scoresData)},
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+
+    function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 });
 </script>
 

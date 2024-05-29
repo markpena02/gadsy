@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <div class="proposal-details">
+            <h1 class="text-center mb-4">Proposal Detailssad123</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail">
+                        <h4>TITLE OF PROPOSALss</h4>
+                        <p id="title"></p>
+                    </div>
+                    <div class="detail">
+                        <h4>NAME OF THE PROPONENT/S</h4>
+                        <p id="proponent"></p>
+                    </div>
+                    <div class="detail">
+                        <h4>OFFICE/UNIT</h4>
+                        <p id="office"></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail">
+                        <h4>PROGRAM/PROJECT DESCRIPTION</h4>
+                        <p id="description"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="buttons text-center mt-5">
+            <button id="view-documents" class="btn btn-primary mr-3">View Documents</button>
+            <button id="view-evaluation-form" class="btn btn-secondary">View Evaluation Form</button>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            const proposalId = getQueryParam('id');
+            console.log("Proposal ID:", proposalId);
+
+            // Function to parse query parameters
+            function getQueryParam(param) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            // Function to fetch proposal details via AJAX
+            function fetchProposalDetails(id) {
+                $.ajax({
+                    url: `../../controller/evaluator/fetch_proposal_details.php?id=${id}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log("Response Data:", response);
+
+                        // Populate proposal details on the page
+                        $('#title').text(response.title);
+                        $('#proponent').text(response.proponent_name);
+                        $('#office').text(response.office);
+                        $('#description').text(response.description);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Handle error
+                    }
+                });
+            }
+
+            // Fetch proposal details on page load
+            if (proposalId) {
+                fetchProposalDetails(proposalId);
+            } else {
+                console.error('Proposal ID not found in the URL.');
+            }
+
+            // Event listener for View Documents button
+            $('#view-documents').click(function() {
+                if (proposalId) {
+                    window.location.href = `../../controller/evaluator/download_proposal.php?id=${proposalId}`;
+                } else {
+                    alert('Proposal ID not found.');
+                }
+            });
+
+            // Event listener for View Evaluation Form button
+            $('#view-evaluation-form').click(function() {
+                if (proposalId) {
+                    window.location.href = `../../evaluator/contents/hgdgform.html?id=${proposalId}`;
+                } else {
+                    alert('Proposal ID not found.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

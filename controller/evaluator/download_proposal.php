@@ -18,7 +18,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         $stmt->fetch();
 
         // Construct the full file path
-        $fullFilePath = $filePath;
+        $fullFilePath = realpath($filePath);
 
         // Check if the file exists
         if (file_exists($fullFilePath)) {
